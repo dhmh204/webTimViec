@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutForUser.cshtml";
+}
+
+@section title
+{
+    <title>Công việc đã ứng tuyển</title>
+
+}
+@{
+    List<FrontEnd.Models.ApplyJobs> jobs = ViewBag.listApplyJobs;
+}
+@section linkCss
+{
+    <link rel="stylesheet" href="../css/viecLamDaUngTuyen.css">
+}
+
+<div id="main">
+    <div id="history-apply">
+        <div class="container">
+            <div class="box-group">
+                <div class="box-group-header-applied box-group-header">
+                    <div class="box-group-title">
+                        Việc làm đã ứng tuyển
+                    </div>
+
+                </div>
+                <div class="box-group-body">
+                    <!-- DANH SÁCH TRỐNG -->
+                    @if (jobs == null)
+                    {
+                        <div class="empty-job ">
+                            <div class="image-empty">
+                                <img src="https://static.topcv.vn/v4/image/history-apply/empty.png" alt="empty apply">
+                            </div>
+                            <h3 class="title">Bạn chưa ứng tuyển công việc nào!</h3>
+                            <div class="caption">
+                                <p>Bạn chưa ứng tuyển công việc nào!</p>
+                                <p>Bắt đầu sự nghiệp mơ ước với hàng nghìn việc làm chất lượng tại TopCV</p>
+                            </div>
+                            <div class="btn-action">
+                                <a href="@Url.ActionLink("Index", "Home")" target="_blank" class="btn btn-primary btn-primary-hover">Tìm việc ngay</a>
+                            </div>
+                        </div>
+                        <!-- END DANH SÁCH TRỐNG -->
+                    }
+                    else
+                    {
+                        <div class="feed-jobs">
+
+                            @foreach (var job in jobs)
+                            {
+                                <!-- START -->
+                                <div class="job-item bg-highlight">
+                                    <div class="d-flex">
+                                        <div class="company-logo">
+                                            <img src="@job.logoUrl" style="max-height: 100%;">
+                                        </div>
+                                        <div class="company-info">
+                                            <div class="title-block">
+                                                <div class="job-title">
+                                                    <a href="" class="transform-job-title">@job.tieuDeTin</a>
+                                                </div>
+                                                <div class="title-salary">@job.mucLuongTu - @job.mucLuongToi</div>
+
+                                            </div>
+                                            <div class="company-name text-gray">
+                                                <!-- chi tiết công ty -->
+                                                <a href="@Url.Action("Index", "ChiTietCongTy", new {id = @job.idCongTy}) class="text-gray">@job.tenCongTy</a>
+                                            </div>
+                                            <div class="job-applies-meta">
+                                                <span class="cv-date">
+                                                    Thời gian ứng tuyển:
+                                                    @job.thoiGianNop
+                                                </span>
+                                            </div>
+                                            <div class="box-footer-history">
+                                                <p class="cv-apply-caption">
+                                                    <!-- mẫu cv lấy để ứng tuyển -->
+                                                    <a href="@job.cvUrl" class="text-hightlight text-green"> CV đã ứng tuyển</a>
+                                                </p>
+
+                                            </div>
+                                            <div class="box-cv-apply-status">
+                                                <div class="cv-apply-status-text">
+                                                    <span class="applied">
+                                                        @job.trangThai
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END -->
+                            }
+                            <!-- LIST JOB UWNSG TUYEERN -->
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

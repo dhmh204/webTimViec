@@ -1,0 +1,415 @@
+﻿﻿@{
+    Layout = "~/Views/Shared/_LayoutForUser.cshtml";
+}
+@section title
+{
+    <title>TopCV - CV xịn việc làm chất - Tạo CV & Tìm việc miễn phí</title>
+}
+
+@section linkCss
+{
+    <link rel="stylesheet" href="~/css/chiTietViecLam.css">
+}
+
+@section linkCss2
+{
+    <link rel="stylesheet" href="~/css/viecLam.css">
+}
+
+@section linkJs
+{
+    <script src="~/js/chiTietViecLam.js"></script>
+}
+@{
+    var jobs = ViewBag.JobDetails as List<Dictionary<string, object>>;
+    if ((jobs != null && jobs.Any()))
+    {
+        var job = jobs.First();
+    }
+}
+
+@{
+    ChiTietTuyenDung chiTietTuyenDung = ViewBag.cttd;
+    CongTy congTy = ViewBag.cty;
+    NhomNghe nn = ViewBag.nghe;
+    String dchi = ViewBag.dchi;
+    var idctvl = Context.Session.GetInt32("idCtvl") ?? 0;
+}
+
+@{
+    var cities = ViewBag.CiTies as List<Dictionary<string, object>>;
+    var searchTerm = ViewBag.Search as string;
+}
+
+<div id="main">
+    <!-- SEARCH JOB -->
+    <div class="search-job">
+        <div class="container">
+            <!-- search -->
+            <div class="header-content__search">
+                <form id="frm-search-job" method="GET">
+                    <div class="group-search d-flex">
+                        <div class="frm-box-category d-flex g-10 " onclick="handleClickListJob()">
+                            <i class="fa-solid fa-list d-flex align-items-center"></i>
+                            <div class="frm-box-category__text font-weight-6">Danh mục Nghề</div>
+                        </div>
+                        <div class="colum-divider"></div>
+                        <div class="item-search">
+                            <input class="form-controlui-autocomplete-input" name="" placeholder="Vị trí tuyển dụng, tên công ty">
+                        </div>
+                        <div class="colum-divider"></div>
+                        <div class="item-filter d-flex align-items-center ">
+                            <i class="bi bi-geo-alt"></i>
+                            <div class="select-container">
+                                <select name="city" id="city">
+                                    <option value="TatCaTinhThanhPho">Tất cả tỉnh/thành phố</option>
+                                    @if (ViewBag.CiTies != null)
+                                    {
+                                        @foreach (var city in cities)
+                                        {
+                                            var cityName = city.ContainsKey("tenThanhPho") ? city["tenThanhPho"].ToString() : "Không tên";
+                                            var cityId = city.ContainsKey("idThanhPho") ? city["idThanhPho"].ToString() : "0";
+                                            <option value="@cityId">@cityName</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option disabled>Không có dữ liệu thành phố</option>
+                                    }
+
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="colum-divider"></div>
+                        <div class="btn-search align-items-center d-flex">
+                            <button class="d-flex align-items-center justify-content-center"><i class="bi bi-search"></i>Tìm kiếm </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <!-- MENU-DROP -->
+            <div class="menu-drop select-group-job hidden">
+                <h5 class="menu-drop__title">Chọn Nhóm nghề, Nghề hoặc chuyên môn</h5>
+                <div class="input-search d-flex">
+                    <i class="bi bi-search"></i><input class="flex-1" name="keyword" placeholder="Nhập từ khóa tìm kiếm">
+                </div>
+                <div class="table-list-job d-flex ">
+                    <div class="group-job-list">
+                        <div class="table-list-job__title">Nhóm nghề</div>
+                        <hr>
+                        <div class="pt-2 container-group-job ">
+                            <div class="group-job-list__item d-flex g-10 align-items-center">
+                                <input type="checkbox" name="group-job" value="kinhDoanhBanHang">
+                                <span class="group-job-list__item__text d-flex">
+                                    <div>Kinh doanh bán hàng</div>
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </div>
+                            <div class="group-job-list__item d-flex g-10 align-items-center">
+                                <input type="checkbox" name="group-job" value="kinhDoanhBanHang">
+                                <span class="group-job-list__item__text d-flex">
+                                    <div>Kinh doanh bán hàng</div>
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </div>
+                            <div class="group-job-list__item d-flex g-10 align-items-center">
+                                <input type="checkbox" name="group-job" value="kinhDoanhBanHang">
+                                <span class="group-job-list__item__text d-flex">
+                                    <div>Kinh doanh bán hàng</div>
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </div>
+                            <div class="group-job-list__item d-flex g-10 align-items-center">
+                                <input type="checkbox" name="group-job" value="kinhDoanhBanHang">
+                                <span class="group-job-list__item__text d-flex">
+                                    <div>Kinh doanh bán hàng</div>
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="colum-divider">
+                    </div>
+                    <div class="job-list">
+                        <div class="d-flex g-15">
+                            <div class="table-list-job__title flex-1">Nghề</div>
+                            <div class="table-list-job__title flex-2">Vị trí chuyên môn</div>
+                        </div>
+                        <hr>
+                        <div class="pt-2 container-job">
+                            <div class="job-item d-flex g-15">
+                                <div class="flex-1">
+                                    <input type="checkbox" name="job">
+                                    <span class="font-weight-6 job-item__text">Sales Xuất nhập khẩu/ Logistics</span>
+                                </div>
+                                <div class="speciality-list d-flex g-15 flex-2">
+                                    <span class="speciality-item">Sales Logistics</span>
+                                    <span class="speciality-item">Sales Xuất nhập khẩu khác</span>
+                                </div>
+                            </div>
+                            <div class="job-item d-flex g-15">
+                                <div class="flex-1">
+                                    <input type="checkbox" name="job">
+                                    <span class="font-weight-6 job-item__text">Sales Xuất nhập khẩu/ Logistics</span>
+                                </div>
+                                <div class="speciality-list d-flex g-10 flex-2">
+                                    <span class="speciality-item ">Sales Logistics</span>
+                                    <span class="speciality-item ">Sales Xuất nhập khẩu khác</span>
+                                </div>
+                            </div>
+                            <div class="job-item d-flex g-15">
+                                <div class="flex-1">
+                                    <input type="checkbox" name="job">
+                                    <span class="font-weight-6 job-item__text">Sales Xuất nhập khẩu/ Logistics</span>
+                                </div>
+                                <div class="speciality-list d-flex g-10 flex-2">
+                                    <span class="speciality-item ">Sales Logistics</span>
+                                    <span class="speciality-item ">Sales Xuất nhập khẩu khác</span>
+                                </div>
+                            </div>
+                            <div class="job-item d-flex g-15">
+                                <div class="flex-1">
+                                    <input type="checkbox" name="job">
+                                    <span class="font-weight-6 job-item__text">Sales Xuất nhập khẩu/ Logistics</span>
+                                </div>
+                                <div class="speciality-list d-flex g-10 flex-2">
+                                    <span class="speciality-item ">Sales Logistics</span>
+                                    <span class="speciality-item ">Sales Xuất nhập khẩu khác</span>
+                                    <span class="speciality-item ">Sales Logistics</span>
+                                    <span class="speciality-item ">Sales Xuất nhập khẩu khác</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <hr>
+                <div class="select-group-job__footer d-flex">
+                    <div>
+                        <div>Bạn gặp vấn đề với Danh mục nghề? <a class="text-green font-weight-6">Gửi góp ý</a></div>
+                    </div>
+                    <div class="group-btn d-flex g-10">
+                        <button class="group-btn--cancel-selected-all text-green font-weight-6">Bỏ chọn tất cả <span class="count">(84)</span></button>
+                        <button class="group-btn--cancel font-weight-6"> Hủy</button>
+                        <button class="group-btn--complete font-weight-6 "> Chọn</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JOB DETAIL -->
+
+    <div class="job-detail">
+        <div class="container">
+            <div class="job-detail__header mb-2 ">
+                <a href="" class="text-green font-weight-6"> Trang chủ</a>
+                <i class="bi bi-chevron-right"></i>
+                <a href="" class="text-green font-weight-6"> Tìm việc làm <span class="name-job">@nn.TenNhomNghe</span></a>
+                <i class="bi bi-chevron-right"></i>
+                <span class="title-job d-block mt-1">Tuyển @nn.TenNhomNghe - Từ @chiTietTuyenDung.KinhNghiem Kinh Nghiệm - Thu Nhập Đến @chiTietTuyenDung.MucLuongToi - @chiTietTuyenDung.DiaDiemLamViecCuThe</span>
+            </div>
+            <div class="job-detail__body d-flex g-15">
+                <div class="job-detail__body-left">
+                    <div id="header-job-info" class="job-detail__box--left d-flex g-15 mb-4">
+                        <h5 class="job-detail__info--title font-weight-6">@chiTietTuyenDung.TieuDeTin</h5>
+                        <div class="d-flex">
+                            <div class="job-detail__info--sections flex-1 d-flex align-items-center g-15">
+                                <div class="job-detail__info--section-icon">
+                                    <i class="fa-solid fa-coins"></i>
+                                </div>
+                                <div class="job-detail__info--section-content">
+                                    <div class="job-detail__info--section-content-title">Mức lương</div>
+                                    <div class="job-detail__info--section-content-value font-weight-6">@chiTietTuyenDung.MucLuongTu - @chiTietTuyenDung.MucLuongToi</div>
+                                </div>
+                            </div>
+                            <div class="job-detail__info--sections flex-1 d-flex align-items-center g-15">
+                                <div class="job-detail__info--section-icon">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                                <div class="job-detail__info--section-content">
+                                    <div class="job-detail__info--section-content-title">Địa điểm</div>
+                                    <div class="job-detail__info--section-content-value font-weight-6">@chiTietTuyenDung.DiaDiemLamViecCuThe</div>
+                                </div>
+                            </div>
+                            <div class="job-detail__info--sections flex-1 d-flex align-items-center g-15">
+                                <div class="job-detail__info--section-icon">
+                                    <i class="fa-solid fa-hourglass"></i>
+                                </div>
+                                <div class="job-detail__info--section-content">
+                                    <div class="job-detail__info--section-content-title">Kinh nghiệm</div>
+                                    <div class="job-detail__info--section-content-value font-weight-6">@chiTietTuyenDung.KinhNghiem</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="job-detail__info--deadline">
+                            <div class="job-detail__info--deadline--icon d-flex g-10 ">
+                                <i class="fa-solid fa-clock d-flex align-items-center"></i>
+                                Hạn nộp hồ sơ: <div class="deadline-date">@chiTietTuyenDung.HanNopHoSo</div>
+                            </div>
+                        </div>
+                        <div class="box-apply-current d-flex g-15">
+                            <!--ứNG TUYỂN NGAY-->
+                            <a href="@Url.Action("UngTuyen", "ChiTietViecLam")"  class=" job-detail__info--actions-button btn-apply-job flex-3 d-flex justify-content-center font-weight-6 "
+                               data-toggle="modal" data-target="#exampleModal">
+                                <i class="bi bi-send"></i>
+                                Ứng tuyển ngay
+
+
+                            </a>
+                            <a class=" job-detail__info--actions-button save-job flex-1 justify-content-center d-flex font-weight-6"  onclick="ChangeIcon()">
+                                <i class="bi bi-heart icon-js1"></i>
+                                <i class="bi bi-heart-fill icon-js2 hidden"></i>
+                                Lưu tin
+                            </a>
+                        </div>
+                    </div>
+                    <div class="job-detail__box--left d-flex ">
+                        <!-- CHI TIẾT TUYỂN DỤNG -->
+                        <div id="box-job-information-detail" class-="job-detail__information-detail">
+                            <h5 class="job-detail__information-detail--title font-weight-6 box-title">
+                                Chi tiết tuyển dụng
+                            </h5>
+                            <div class="job-tags">
+                                <span class="item">Chuyên môn: @nn.TenNhomNghe</span>
+                            </div>
+                            <div class="job-detail__information-detail--content">
+                                <div class="job-description">
+                                    <!-- MÔ TẢ CÔNG VIỆC -->
+                                    <div class="job-description__item">
+                                        <h6 class="font-weight-6">
+                                            Mô tả công việc
+                                        </h6>
+                                        <div class="job-description__item--content">
+                                            <p>@chiTietTuyenDung.MoTaCongViec</p>
+                                        </div>
+                                    </div>
+                                    <!-- YÊU CẦU ỨNG VIÊN -->
+                                    <div class="job-description__item">
+                                        <h6 class="font-weight-6">
+                                            Yêu cầu ứng viên
+                                        </h6>
+                                        <div class="job-description__item--content">
+                                            <p>@chiTietTuyenDung.YeuCauUngVien</p>
+                                        </div>
+                                    </div>
+                                    <!-- QUYỀN LỢI -->
+                                    <div class="job-description__item">
+                                        <h6 class="font-weight-6">
+                                            Quyền lợi
+                                        </h6>
+                                        <div class="job-description__item--content">
+                                            <p>@chiTietTuyenDung.QuyenLoiUngVien</p>
+                                        </div>
+                                    </div>
+                                    <!-- CÁCH THỨC ỨNG TUYỂN -->
+                                    <div class="job-description__item">
+                                        <h6 class="font-weight-6">
+                                            Cách thức ứng tuyển
+                                        </h6>
+                                        <div class="job-description__item--content">
+                                            Ứng viên nộp hồ sơ trực tuyến bằng cách bấm <b>Ứng tuyển</b> ngay dưới đây.
+                                        </div>
+                                    </div>
+                                    <!-- XỬ LÝ ACTION -->
+                                    <div class="job-detail__information-detail--actions mt-2">
+                                        <div class="job-detail__information-detail--actions-label">Hạn nộp hồ sơ: <span class="date-deadline">@chiTietTuyenDung.HanNopHoSo</span></div>
+                                        <div class="d-flex g-15 mt-2">
+                                            <a class="job-detail__information-detail--actions-button btn-apply-job d-flex font-weight-6" href="@Url.Action("UngTuyen", "ChiTietViecLam")">Ứng tuyển ngay</a>
+                                            <a class="job-detail__information-detail--actions-button save-job d-flex font-weight-6" >Lưu tin</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- start jjob detail right -->
+                <div class="job-detail__body-right">
+                    <div class="job-detail__box--right job-detail__company d-flex flex-column">
+                        <div class="job-detail__company--information-item company-name d-flex g-10 align-items-center mb-3">
+                            <img src="~/img/@congTy.LogoUrl" alt="" class="logo-company">
+                            <h6 class="company-name font-weight-6">@congTy.TenCongTy </h6>
+                        </div>
+                        <div class="job-detail__company--information-item g-15 company-scale d-flex ">
+                            <div class="company-title d-flex g-10"><i class=" fa-solid fa-user-group"></i> Quy mô</div>
+                            <div class="company-value font-weight-6">@congTy.QuyMoCongTy</div>
+                        </div>
+                        <div class="job-detail__company--information-item g-15 company-field d-flex ">
+                            <div class="company-title d-flex g-10"><i class=" fa-solid fa-cube"></i> Lĩnh vực</div>
+                            <div class="company-value font-weight-6">@nn.TenNhomNghe</div>
+                        </div>
+                        <div class="job-detail__company--information-item g-15 company-address d-flex ">
+                            <div class="company-title d-flex g-10"><i class=" fa-solid fa-location-dot"></i>Địa điểm</div>
+                            <!--get string địa điểm làm việc-->
+                            <div class="company-value font-weight-6">@dchi</div>
+                        </div>
+                        <div class="job-detail__company--link ">
+                            <a href="" class="text-green">Xem trang công ty<i class=" ms-2 fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="job-detail__box--right job-detail__body-right--box-general">
+                        <h5 class="font-weight-6">Thông tin chung</h5>
+                        <div class="box-general-content d-flex flex-column g-10">
+                            <div class="box-general-group d-flex g-15">
+                                <div class="box-general-icon"><i class="fa-solid fa-medal"></i></div>
+                                <div class="box-general-info">
+                                    <div class="box-general-info__title">Cấp bậc</div>
+                                    <div class="box-general-info__value">Nhân viên</div>
+                                </div>
+                            </div>
+                            <div class="box-general-group d-flex g-15">
+                                <div class="box-general-icon"><i class="fa-solid fa-hourglass"></i></i></div>
+                                <div class="box-general-info">
+                                    <div class="box-general-info__title">Kinh nghiệm</div>
+                                    <div class="box-general-info__value">@chiTietTuyenDung.KinhNghiem</div>
+                                </div>
+                            </div>
+                            <div class="box-general-group d-flex g-15">
+                                <div class="box-general-icon"><i class="fa-solid fa-user-group"></i></div>
+                                <div class="box-general-info">
+                                    <div class="box-general-info__title">Số lượng tuyển</div>
+                                    <div class="box-general-info__value">@chiTietTuyenDung.SoLuongUngTuyen</div>
+                                </div>
+                            </div>
+                            <div class="box-general-group d-flex g-15">
+                                <div class="box-general-icon"><i class="fa-solid fa-briefcase"></i></div>
+                                <div class="box-general-info">
+                                    <div class="box-general-info__title">Hình thức làm việc</div>
+                                    <div class="box-general-info__value">@chiTietTuyenDung.LoaiCongViec</div>
+                                </div>
+                            </div>
+                            <div class="box-general-group d-flex g-15">
+                                <div class="box-general-icon"><i class="fa-solid fa-user"></i></div>
+                                <div class="box-general-info">
+                                    <div class="box-general-info__title">Giới tính</div>
+                                    <div class="box-general-info__value">@chiTietTuyenDung.GioiTinh</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <script>
+        ChangeIcon = function(){
+            console.log("da an")
+           var i1 = document.querySelector(".icon-js1")
+            var i2 = document.querySelector(".icon-js2")
+            if (i1.classList.contains("hidden")) {
+                i1.classList.add("hidden");
+                i2.classList.remove("hidden");
+
+            } else {
+                i2.classList.add("hidden");
+                i1.classList.remove("hidden");
+            }
+           
+        }
+  </script>

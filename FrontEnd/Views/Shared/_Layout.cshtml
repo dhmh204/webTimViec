@@ -1,0 +1,183 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FrontEnd</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+    <link rel="stylesheet" href="~/css/Style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="../font/fontawesome-free-6.7.1-web/fontawesome-free-6.7.1-web/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    @{
+        var userName = Context.Session.GetString("UserName") ?? "";
+    }
+    <header class="header gap-3 align-items-center d-flex fixed-top">
+        <div class="header__icon">
+            <i class="bi bi-list text-white"></i>
+        </div>
+        <div class="header__logo">
+            <a href="#" class="header__logo-link">
+                <img src="~/img/logo_topcv_dark.png" />
+            </a>
+        </div>
+
+        <ul class="header__nav d-flex align-items-center">
+            <li class="header__nav-item mr-16">
+                <a href="" class="header__nav-link text-white">
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+            </li>
+            <li class="header__nav-item flex-shrink-0 dropdown">
+                <a href="#" class="header__nav-link d-block link-body-emphasis text-decoration-none dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle" style="font-size: 18px"></i>
+                </a>
+                <ul class="header__dropdown dropdown-menu text-small shadow">
+                    <li class="header__dropdown-item">
+                        <a class="dropdown-item" href="#">
+                            <i class="bi bi-question-circle-fill"></i>
+                            Hỗ trợ
+                        </a>
+                    </li>
+                    <li class="header__dropdown-item">
+                        <a class="dropdown-item" href="#">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Đăng xuất
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+        </ul>
+    </header>
+
+    <div class="sidebar sidebar-wrapper sidebar-full d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
+        <div class="sidebar__header d-flex">
+            <div class="sidebar__user-pic mr-16 d-flex align-items-center">
+                <a href="#">
+                    <img src="./img/user.png" />
+                </a>
+            </div>
+            <div class="sidebar__user-info d-flex flex-column">
+                <span class="sidebar__user-name">
+                    <a href="#">@userName</a>
+                </span>
+                <span class="sidebar__user-role">
+                    Employer
+                </span>
+                <div class="sidebar__user-policy d-flex">
+                    <p class="mb-1">Tài khoản xác thực: </p>
+                    <p class="text-green mb-1">Cấp 1/3</p>
+                    <i class="bi bi-question-circle-fill"></i>
+                </div>
+            </div>
+
+        </div>
+        <div class="sidebar__button">
+            <button class="sidebar__button-item d-flex">
+                <i class="fa-solid fa-shield-halved"></i>
+                <p class="mb-0">Xác thực tài khoản điện tử</p>
+                <i class="bi bi-chevron-double-right btn-move"></i>
+            </button>
+        </div>
+        <hr />
+        <div class="sidebar__menu">
+            <ul class="sidebar__menu-list nav nav-pills flex-column mb-auto">
+                <li class="sidebar__menu-item nav-item">
+                    <a href="@Url.Action("Index", "BangTin")" class="nav-link link-body-emphasis">
+                        <i class="bi bi-grid"></i>
+                        Bảng tin
+                    </a>
+                </li>
+                <li class="sidebar__menu-item">
+                    <a href="@Url.Action("Index", "DangTinTuyenDung")" class="nav-link link-body-emphasis">
+                        <i class="bi bi-pencil-square"></i>
+                        Đăng tin
+                    </a>
+                </li>
+                <li class="sidebar__menu-item">
+                    <a href="@Url.Action("Index", "QuanLyCV_NhaTD")" class="nav-link link-body-emphasis">
+                        <i class="bi bi-person-circle"></i>
+                        Quản lý CV
+                    </a>
+                </li>
+                <li class="sidebar__menu-item">
+                    <a href="@Url.Action("Index", "CaiDatTaiKhoan")" class="nav-link link-body-emphasis">
+                        <i class="bi bi-gear"></i>
+                        Cài đặt tài khoản
+                    </a>
+                </li>
+                <li class="sidebar__menu-item">
+                    <a href="#" class="nav-link link-body-emphasis">
+                        <i class="bi bi-envelope-at"></i>
+                        Hộp thư hỗ trợ
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+
+    <footer class="footer text-muted">
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
+
+<script>
+    function getUserIdFromSession() {
+        // Lấy id người dùng từ sessionStorage
+        const userId = 1; // Đặt mặc định hoặc lấy từ session
+        if (!userId) {
+            console.error("Không tìm thấy ID người dùng trong session.");
+            return null;
+        }
+        return userId;
+    }
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Lấy idUngVien từ sessionStorage
+        const idUngVien = getUserIdFromSession();
+
+        if (!idUngVien) {
+            console.error("Không tìm thấy idUngVien trong session.");
+            return;
+        }
+
+        try {
+            // Gửi yêu cầu GET đến API để lấy thông tin ứng viên
+            const response = await fetch(`https://localhost:7208/api/UngViens/${idUngVien}`);
+
+            if (!response.ok) {
+                throw new Error(`Lỗi khi tải dữ liệu: ${response.statusText}`);
+            }
+
+            const ungVien = await response.json();
+
+            // Gắn dữ liệu vào giao diện
+            document.getElementById("SrcImg").src = ungVien.anhHoSoUrl || "./img/user.png"; // Giá trị mặc định nếu không có ảnh
+            document.getElementById("tenUngVien").textContent = ungVien.hoTen || "Không xác định";
+
+        } catch (error) {
+            console.error("Đã xảy ra lỗi khi lấy thông tin ứng viên:", error);
+        }
+    });
+
+</script>

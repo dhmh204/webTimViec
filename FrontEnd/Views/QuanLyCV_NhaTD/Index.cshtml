@@ -1,0 +1,128 @@
+﻿﻿@Model IEnumerable<FrontEnd.Controllers.HoSoViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link rel="stylesheet" href="~/css/quanLyCV_NhaTD.css" />
+}
+<div class="page-container has-sub-breadcrumb">
+    <div class="breadcrumb-box">
+        <h6>Quản lý CV ứng viên</h6>
+    </div>
+    <div class="py-2 sub-breadcrumb-box">
+        <div class="filter-container w-100">
+            <div class="d-flex w-100">
+                <div class="box-search d-flex align-items-center d-flex">
+                    <form class="content form-search me-3">
+                        <input type="text" placeholder="Tìm kiếm tên, email, số điện thoại" class="form-control search-input pe-4">
+                        <button type="submit" class="btn-search border-0 bg-transparent">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="d-flex  align-items-center justify-content-center">
+                    <select class="form-select form-condition" aria-label="Default select example">
+                        <option selected>Hiển thị tất cả CV</option>
+                        <option value="1">CV đã duyệt</option>
+                        <option value="2">CV đã từ chối</option>
+                        <option value="3">CV chờ duyệt</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid page-content">
+        <div class="page-list-cv bg-white rounded shadow-sm mb-3">
+            <div class="flex-sb align-items-center p-3 d-flex">
+                <div class="text-grey">
+                    <span>Tìm thấy</span>
+                    <span class="count-candidate text-green" style="font-size:15px; font-weight: 700">0</span>
+                    <span>ứng viên</span>
+                </div>
+            </div>
+
+            <div class="list-cv">
+                <table class="w-100">
+                    <thead>
+                        <tr>
+                            <th>Ứng viên</th>
+                            <th>Mã CV</th>
+                            <th>Thông tin liên hệ</th>
+                            <th>Thời gian nộp</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model)
+                        {
+                            <tr class="ung-vien-row" data-id="@item.id_HoSoDaNop">
+                                <td class="info-cv">
+                                    <div class="candidate-info d-flex">
+                                        <div class="avatar">
+                                            <img src="@Url.Content("~/img/" + item.AnhHoSo)" alt="Avatar" />
+                                        </div>
+                                        <div class="info">
+                                            <h6>@item.HoTen</h6>
+                                           
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="id-candidate">
+                                        <span>@item.id_HoSoDaNop</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div class="email">
+                                            <i class="bi bi-envelope"></i>
+                                            <span>@item.Email</span>
+                                        </div>
+                                        <div class="phone">
+                                            <i class="bi bi-telephone"></i>
+                                            <span>@item.SDT</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="insight">
+                                        <div class="time">
+                                            <i class="bi bi-clock"></i>
+                                            <span>@item.ThoiGianNop</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.TrangThai == "Đã duyệt")
+                                    {
+                                        <div class="btn-approved condition d-flex">
+                                            <span class="m-auto">Đã duyệt</span>
+                                        </div>
+                                    }
+                                    else if (item.TrangThai == "Đã từ chối")
+                                    {
+                                        <div class="btn-refused condition d-flex">
+                                            <span class="m-auto">Đã từ chối</span>
+                                        </div>
+                                    }
+                                    else if (item.TrangThai == "Chờ duyệt")
+                                    {
+                                        <div class="btn-approve condition d-flex" onclick="updateTrangThai(@item.id_HoSoDaNop, 'Đã duyệt')">
+                                            <span class="m-auto">Duyệt</span>
+                                        </div>
+                                        <div class="btn-refuse condition d-flex mt-2" onclick="updateTrangThai(@item.id_HoSoDaNop, 'Đã từ chối')">
+                                            <span class="m-auto">Từ chối</span>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <script src="./js/quanLyCV_NhaTD.js"></script>

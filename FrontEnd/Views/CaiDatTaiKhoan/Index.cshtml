@@ -1,0 +1,156 @@
+﻿﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link rel="stylesheet" href="~/css/caiDatTK.css" />
+}
+@{var idUV = Context.Session.GetInt32("Id");}
+<div class="page-container">
+    <div class="breadcrumb-box">
+        <div class="breadcrumb-text">
+            <h6 class="mb-0 fw-bolder">Cài đặt tài khoản</h6>
+        </div>
+    </div>
+    <div class="container-fluid page-content">
+        <div class="d-flex shadow-sm">
+            <div>
+                <div class="list-group rounded">
+                    <a href="@Url.Action("Index", "CaiDatTaiKhoan")" class="list-item border-0 active">
+                        <i class="fa fa-lock me-2"></i>
+                        Đổi mật khẩu
+                    </a>
+                    <a href="@Url.Action("Index", "ThongTinCaNhan")" class="list-item border-0">
+                        <i class="fa fa-user me-2"></i>
+                        Thông tin cá nhân
+                    </a>
+                    <a href="@Url.Action("Index", "ThongTinCongTy")" class="list-item border-0">
+                        <i class="fa fa-building me-2"></i>
+                        Thông tin công ty
+                    </a>
+                </div>
+            </div>
+            <div class="bg-white w-100 rounded">
+                <div>
+                    <form>
+                        <div class="card-header bg-white font-weight-bold border-0 fw-bolder">
+                            Thay đổi mật khẩu
+                        </div>
+                        <div class="card-body setting-form">
+                            <div class="form-group row d-flex mb-3">
+                                <label class="col-sm-3 col-form-label">Mật khẩu hiện tại</label>
+                                <div class="col-sm-9">
+                                    <input autocomplete="true" placeholder="Nhập mật khẩu hiện tại" type="password" class="form-control" id="currentPassword">
+                                </div>
+                            </div>
+                            <div class="form-group row d-flex mb-3">
+                                <label class="col-sm-3 col-form-label">Mật khẩu mới</label>
+                                <div class="col-sm-9">
+                                    <input autocomplete="true" placeholder="Nhập mật khẩu mới" type="password" class="form-control" id="newPassword">
+                                </div>
+                            </div>
+                            <div class="form-group row d-flex mb-3">
+                                <label class="col-sm-3 col-form-label">Nhập lại mật khẩu</label>
+                                <div class="col-sm-9">
+                                    <input autocomplete="true" placeholder="Nhập lại mật khẩu mới" type="password" class="form-control" id="confirmPassword">
+                                </div>
+                            </div>
+                            <div class="form-group row d-flex mb-3">
+                                <div class="col-sm-9 offset-sm-3">
+                                    <input type="checkbox" class="has-logout-all-device">
+                                    <label for="has-logout-all-device" class="has-logout-all-device">Thoát tất cả các phiên bản đăng nhập hiện tại</label>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <div class="col-sm-9 offset-sm-3">
+                                    <a href="#" class="btn-cancel btn me-2 bg-blue">Hủy</a>
+                                    <button type="submit" class="btn-update btn text-white bg-green">Cập nhật</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    function getUserIdFromSession() {
+        // Lấy id người dùng từ sessionStorage
+        // const userId = sessionStorage.getItem('userId');
+        const userId = @idUV;
+        // Kiểm tra nếu id người dùng không tồn tại trong sessionStorage
+        if (!userId) {
+            console.error("Không tìm thấy ID người dùng trong session.");
+            return null; // Trả về null nếu không có id người dùng
+        }
+
+        return userId; // Trả về ID người dùng
+    }
+
+    document.querySelector('.btn-update').addEventListener('click', async function (event) {
+        event.preventDefault();
+
+        // Lấy ID người dùng từ session
+        const userId = getUserIdFromSession();
+
+        // Kiểm tra nếu không tìm thấy ID người dùng
+        if (!userId) {
+            alert("Không tìm thấy ID người dùng.");
+            return;
+        }
+        console.log(userId)
+        // Lấy thông tin mật khẩu từ form
+        const currentPassword = document.querySelector('input[placeholder="Nhập mật khẩu hiện tại"]').value;
+        const newPassword = document.querySelector('input[placeholder="Nhập mật khẩu mới"]').value;
+        const confirmPassword = document.querySelector('input[placeholder="Nhập lại mật khẩu mới"]').value;
+
+        // Kiểm tra thông tin đầu vào
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            alert("Vui lòng điền đầy đủ thông tin!");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert("Mật khẩu mới và mật khẩu xác nhận không khớp!");
+            return;
+        }
+
+        // Tạo đối tượng dữ liệu để gửi lên server
+        const data = {
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword
+        };
+
+        // Gửi yêu cầu PUT tới API
+        try {
+            const response = await fetch(`https://localhost:7208/api/NhaTuyenDungs/changepassword/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message); // Hiển thị thông báo thành công
+                // Clear các input
+                document.querySelector('input[placeholder="Nhập mật khẩu hiện tại"]').value = '';
+                document.querySelector('input[placeholder="Nhập mật khẩu mới"]').value = '';
+                document.querySelector('input[placeholder="Nhập lại mật khẩu mới"]').value = '';
+            } else {
+                alert(result.message); // Hiển thị thông báo lỗi
+            }
+        } catch (error) {
+            console.error('Có lỗi xảy ra:', error);
+            alert('Lỗi hệ thống, vui lòng thử lại sau!');
+        }
+    });
+
+</script>
